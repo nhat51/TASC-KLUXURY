@@ -7,20 +7,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "roles")
-public class Role {
+@Entity(name = "wards")
+public class Ward extends BaseEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+    @Column(name = "district_id")
+    private int district_id;
 
-    @OneToMany(mappedBy = "role")
+    @ManyToOne
+    @JoinColumn(name = "district_id",insertable = false,updatable = false)
     @JsonIgnore
-    private Set<User> users;
+    private District district;
 }

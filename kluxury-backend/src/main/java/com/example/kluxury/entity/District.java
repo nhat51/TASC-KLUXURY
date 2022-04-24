@@ -13,14 +13,19 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "roles")
-public class Role {
+@Entity(name = "districts")
+public class District extends BaseEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+    @Column(name = "province_id")
+    private int province_id;
 
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "district")
+    private Set<Ward> wards;
+
+    @ManyToOne
+    @JoinColumn(name = "province_id",insertable = false,updatable = false)
     @JsonIgnore
-    private Set<User> users;
+    private Province province;
 }

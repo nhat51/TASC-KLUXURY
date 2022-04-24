@@ -20,12 +20,13 @@ public class User extends BaseEntity{
     private String last_name;
     private String email;
     private String address;
+    private String city;
+    private String district;
+    private String ward;
     private String phone;
 
     @ManyToOne
     @JoinColumn(name = "role_id",nullable = false)
     private Role role;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Cart cart;
 }
