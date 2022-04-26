@@ -12,12 +12,12 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDto {
-    private int id;
     private String customer_name;
+    private int province_id;
+    private int district_id;
+    private int ward_id;
     private String ship_address;
     private String phone_number;
     private String ship_note;
     private int user_id;
-    private LocalDate created_at;
-    private LocalDate updated_at;
 }

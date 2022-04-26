@@ -1,5 +1,7 @@
 package com.example.kluxury.utils;
 
+import com.example.kluxury.service.order.OrderServiceImpl;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -15,8 +17,4 @@ public class HandleDateTime {
         return Instant.ofEpochMilli(localDateLong).atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
-    public static void main(String[] args) {
-        Long date = convertDateTimeToLong(LocalDate.now());
-        System.out.println(date);
-    }
 }

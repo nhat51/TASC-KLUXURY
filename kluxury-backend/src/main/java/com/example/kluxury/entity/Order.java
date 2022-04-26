@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -18,6 +19,9 @@ public class Order extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    private int province_id;
+    private int district_id;
+    private int ward_id;
     private String customer_name;
     private String ship_address;
     private String ship_city;
@@ -38,7 +42,7 @@ public class Order extends BaseEntity{
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
     private Set<OrderDetail> orderDetails;
 
     @JsonIgnore
