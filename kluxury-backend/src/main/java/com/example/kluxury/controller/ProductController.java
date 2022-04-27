@@ -13,8 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/products")
+@CrossOrigin("*")
 public class ProductController {
 
     @Autowired
@@ -22,7 +25,7 @@ public class ProductController {
 
     @RequestMapping(method = RequestMethod.GET,path = "list")
     public ResponseEntity<Object> listProduct(@RequestParam(name = "page",defaultValue = "1") int page,
-                                              @RequestParam(name = "pageSize",defaultValue = "2") int pageSize,
+                                              @RequestParam(name = "pageSize",defaultValue = "5") int pageSize,
                                               @RequestParam(name = "minPrice",defaultValue = "-1") int minPrice,
                                               @RequestParam(name = "maxPrice",defaultValue = "-1") int maxPrice,
                                               @RequestParam(name = "categoryId", defaultValue = "-1") int categoryId,
@@ -40,7 +43,7 @@ public class ProductController {
         MyPage paging = service.findAll(filter);
         return new ResponseEntity<>(new RESTResponse.Success()
                 .setPagination(new RESTPagination(paging.getPage() + 1, paging.getPageSize(), paging.getTotalPage()))
-                .addData(paging.getContent())
+                .addDatas((List<ProductDto>) paging.getContent())
                 .buildData(), HttpStatus.OK);
     }
 

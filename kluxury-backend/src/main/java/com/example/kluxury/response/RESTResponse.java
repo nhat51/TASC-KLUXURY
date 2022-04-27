@@ -125,7 +125,7 @@ public class RESTResponse {
             return this;
         }
 
-        public Success addData(List listObj) {
+        public Success addDatas(List listObj) {
             this.data.addAll(listObj);
             return this;
         }

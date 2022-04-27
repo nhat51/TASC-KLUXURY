@@ -1,7 +1,9 @@
 package com.example.kluxury.service.product;
 
+import com.example.kluxury.entity.Category;
 import com.example.kluxury.entity.Product;
 import com.example.kluxury.entity.dto.ProductDto;
+import com.example.kluxury.repo.CategoryRepository;
 import com.example.kluxury.repo.ProductRepository;
 import com.example.kluxury.response.MyPage;
 import com.example.kluxury.response.ResponseApi;
@@ -26,6 +28,9 @@ public class ProductServiceImpl implements ProductsService {
     @Autowired
     ProductRepository productRepository;
 
+    @Autowired
+    CategoryRepository categoryRepository;
+
     @Override
     public MyPage findAll(ProductFilter filter) {
         Specification<Product> spec = Specification.where(null);
@@ -36,6 +41,10 @@ public class ProductServiceImpl implements ProductsService {
         }
         if (filter.getCategory_id() > 0) {
             spec = spec.and(new ProductSpecification(new SearchCriteria(ProductFilter.CATEGORY_ID, SQLConstant.EQUAL, filter.getCategory_id())));
+            Category parentCategory = categoryRepository.getById(filter.getCategory_id());
+            if (parentCategory.getListSubCategory() != null){
+                
+            }
         }
         if (filter.getBrand_id() > 0) {
             spec = spec.and(new ProductSpecification(new SearchCriteria(ProductFilter.BRAND_ID, SQLConstant.EQUAL, filter.getBrand_id())));
@@ -57,6 +66,7 @@ public class ProductServiceImpl implements ProductsService {
         mypage.setPageSize(page.getSize());
         mypage.setTotalPage(page.getTotalPages());
         mypage.setPage(page.getNumber() + 1);
+        System.out.println(mypage.getContent());
         return mypage;
     }
 

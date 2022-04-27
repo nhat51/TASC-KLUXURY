@@ -4,11 +4,17 @@ import com.example.kluxury.entity.*;
 import com.example.kluxury.entity.dto.OrderDetailDto;
 import com.example.kluxury.entity.dto.OrderDto;
 import com.example.kluxury.repo.*;
+import com.example.kluxury.response.MyPage;
+import com.example.kluxury.specification.OrderSpecification;
+import com.example.kluxury.specification.SearchCriteria;
 import com.example.kluxury.utils.OrderFilter;
+import com.example.kluxury.utils.SQLConstant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Id;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -148,9 +154,30 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public List<Order> getAll(OrderFilter filter) {
+    public MyPage getAll(OrderFilter filter) {
+        Specification<Order> spec = Specification.where(null);
+        PageRequest pageRequest = PageRequest.of(filter.getPage() - 1, filter.getPageSize());
 
-        return orderRepository.findAll();
+        if (filter.getProvince_id() > 0) {
+            spec = spec.and(new OrderSpecification(new SearchCriteria(OrderFilter.PROVINCE_ID, SQLConstant.EQUAL, filter.getProvince_id())));
+        }
+        if (filter.getDistrict_id() > 0) {
+            spec = spec.and(new OrderSpecification(new SearchCriteria(OrderFilter.DISTRICT_ID, SQLConstant.EQUAL, filter.getDistrict_id())));
+        }
+        if (filter.getWard_id() > 0) {
+            spec = spec.and(new OrderSpecification(new SearchCriteria(OrderFilter.WARD_ID, SQLConstant.EQUAL, filter.getWard_id())));
+        }
+        if (filter.getCreated_at() != null) {
+            spec = spec.and(new OrderSpecification(new SearchCriteria(OrderFilter.CREATED_AT, SQLConstant.EQUAL, filter.getCreated_at())));
+        }
+
+        Page<Order> page = orderRepository.findAll(spec, pageRequest);
+        MyPage mypage = new MyPage();
+        mypage.setContent(page.getContent());
+        mypage.setPageSize(page.getSize());
+        mypage.setTotalPage(page.getTotalPages());
+        mypage.setPage(page.getNumber() + 1);
+        return mypage;
     }
 
     @Override

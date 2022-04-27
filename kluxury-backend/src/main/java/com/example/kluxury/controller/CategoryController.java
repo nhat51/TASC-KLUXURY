@@ -10,15 +10,16 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/categories")
+@CrossOrigin("*")
 public class CategoryController {
 
         @Autowired
         private CategoryService service;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET,path = "list")
     public ResponseEntity<Object> getAll(){
         return new ResponseEntity<>(new RESTResponse.Success()
-                .addData(service.getAll())
+                .addDatas(service.getAll())
                 .buildData(), HttpStatus.OK);
     }
 

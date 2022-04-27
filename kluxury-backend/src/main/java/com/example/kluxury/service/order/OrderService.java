@@ -4,6 +4,7 @@ import com.example.kluxury.entity.Order;
 import com.example.kluxury.entity.OrderDetail;
 import com.example.kluxury.entity.dto.OrderDetailDto;
 import com.example.kluxury.entity.dto.OrderDto;
+import com.example.kluxury.response.MyPage;
 import com.example.kluxury.utils.OrderFilter;
 
 import java.util.List;
@@ -15,6 +16,6 @@ public interface OrderService {
     Order updateCart(int userId, Set<OrderDetail> list);
     Order removeItem(int userId, int productId);
     Order proceedOrder(int userId, OrderDto orderDto);
-    List<Order> getAll(OrderFilter filter);
+    MyPage getAll(OrderFilter filter);
     List<Order> getByUserId();
 }
