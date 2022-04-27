@@ -13,6 +13,5 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class OrderDetailDto {
     private int product_id;
-    private double unit_price;
     private int amount;
 }

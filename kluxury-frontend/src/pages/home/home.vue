@@ -12,7 +12,7 @@
                   <form>
                     <div class="select-style">
                       <select class="select-optn ">
-                        <option class="first-option">all catagory </option>
+                        <option class="first-option">Danh Mục Sản Phẩm </option>
                         <option> catagory 1</option>
                         <option> catagory 2</option>
                         <option> catagory 3</option>

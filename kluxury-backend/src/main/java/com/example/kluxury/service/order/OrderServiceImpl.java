@@ -62,10 +62,10 @@ public class OrderServiceImpl implements OrderService{
 
             orderDetail.setProduct(product.get());
             orderDetail.setProduct_name(product.get().getName());
+            orderDetail.setUnit_price(product.get().getPrice());
         }
         //set số lượng và giá của sản phầm tại thời điểm bán
         orderDetail.setAmount(orderDetailDto.getAmount());
-        orderDetail.setUnit_price(orderDetailDto.getUnit_price());
         // Tìm trong db xem ng dùng đã có cart hay chưa
         Order exist = orderRepository.getCart(userId);
         //trường hợp người dùng đã có cart trong db r

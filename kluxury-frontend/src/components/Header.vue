@@ -16,7 +16,7 @@
               <div class="main-menu">
                 <nav>
                   <ul class="main">
-                    <li class="active"><a class="main-a" href="/"><span>Home</span></a>
+                    <li class="active"><a class="main-a" href="/"><span>Trang Chủ</span></a>
                       <ul>
                         <li><a href="index.html">home page 1</a></li>
                         <li><a href="index-2.html">home page 2</a></li>
@@ -28,7 +28,7 @@
                         <li><a href="index-8.html">home page 8</a></li>
                       </ul>
                     </li>
-                    <li class=""><a class="main-a" href="/shop">Shop</a></li>
+                    <li class=""><a class="main-a" href="/shop">Sản Phẩm</a></li>
                     <li class="static"><a class="main-a" href="#"><span>Elements</span></a>
                       <div class="mega-menu">
                         <div class="mega-menu-def row">
@@ -111,8 +111,8 @@
                         <li><a href="portfolio-4.html">Four Columns</a></li>
                       </ul>
                     </li>
-                    <li><a class="main-a" href="contact.html">Contact</a></li>
-                    <li><a class="main-a" href="about.html">About Us</a></li>
+                    <li><a class="main-a" href="contact.html">Liên Hệ</a></li>
+                    <li><a class="main-a" href="about.html">Về Chúng Tôi</a></li>
                   </ul>
                 </nav>
               </div>

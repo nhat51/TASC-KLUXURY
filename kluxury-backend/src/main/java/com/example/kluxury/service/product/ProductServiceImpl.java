@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ProductServiceImpl implements ProductsService {
@@ -42,8 +43,10 @@ public class ProductServiceImpl implements ProductsService {
         if (filter.getCategory_id() > 0) {
             spec = spec.and(new ProductSpecification(new SearchCriteria(ProductFilter.CATEGORY_ID, SQLConstant.EQUAL, filter.getCategory_id())));
             Category parentCategory = categoryRepository.getById(filter.getCategory_id());
-            if (parentCategory.getListSubCategory() != null){
-                
+            if (parentCategory.getListSubCategory().size() > 0){
+                for (Category c : parentCategory.getListSubCategory()) {
+                    spec = spec.and(new ProductSpecification(new SearchCriteria(ProductFilter.CATEGORY_ID,SQLConstant.EQUAL,c.getId())));
+                }
             }
         }
         if (filter.getBrand_id() > 0) {
@@ -66,7 +69,6 @@ public class ProductServiceImpl implements ProductsService {
         mypage.setPageSize(page.getSize());
         mypage.setTotalPage(page.getTotalPages());
         mypage.setPage(page.getNumber() + 1);
-        System.out.println(mypage.getContent());
         return mypage;
     }
 
