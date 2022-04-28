@@ -46,6 +46,7 @@
           <div class="col-lg-3 order-2 order-lg-1">
             <div class="widget">
               <h3>Danh Mục Sản Phẩm</h3>
+              <h6 @click="reset()">Tất cả sản phẩm</h6>
               <ul v-for="item in cateData" :key="item.id">
                 <li slot="text">
                   <h6 @click="CategoryParentClick(item.id)" :id="item.id" class="CateParent">{{item.name}}</h6>
@@ -68,10 +69,14 @@
                 <h3>Price</h3>
                 <div class="info_widget">
                   <div class="price_filter">
-                    <div id="slider-range"></div>
                     <div class="price_slider_amount">
-                      <input type="text" id="amount" name="price" placeholder="Add Your Price"/>
-                      <input type="submit" value="Filter"/>
+                      <form @submit="filterProductByPrice">
+                        <div class="row justify-content-around">
+                          <input class="col-5 border-0" type="text" id="max" name="price" placeholder="Max Price">
+                          <input class="col-5 border-0" type="text" id="min" name="price" placeholder="Min Price">
+                        </div>
+                      </form>
+                      <input @click="filterProductByPrice" type="submit" value="Filter">
                     </div>
                   </div>
                 </div>
@@ -400,6 +405,24 @@ export default {
         console.log( rs.data.data)
         this.productData = rs.data.data
       })
+    },
+    filterProductByPrice(){
+      var max = document.getElementById('max')
+      var min = document.getElementById('min')
+      this.params.maxPrice = parseFloat(max.value);
+      this.params.minPrice = parseFloat(min.value);
+      ProductService.getAll(this.params).then(
+          rs => {
+            this.productData = rs.data.data
+          }
+      )
+    },
+    reset(){
+      ProductService.getAll().then(
+          rs => {
+            this.productData = rs.data.data
+          }
+      )
     }
   }
 }
@@ -409,9 +432,7 @@ export default {
 .CateParent {
   cursor: pointer;
 }
-
 .CateSub {
   display: none;
 }
-
 </style>

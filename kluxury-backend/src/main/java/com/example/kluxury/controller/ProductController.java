@@ -26,8 +26,8 @@ public class ProductController {
     @RequestMapping(method = RequestMethod.GET,path = "list")
     public ResponseEntity<Object> listProduct(@RequestParam(name = "page",defaultValue = "1") int page,
                                               @RequestParam(name = "pageSize",defaultValue = "6") int pageSize,
-                                              @RequestParam(name = "minPrice",defaultValue = "-1") int minPrice,
-                                              @RequestParam(name = "maxPrice",defaultValue = "-1") int maxPrice,
+                                              @RequestParam(name = "minPrice",defaultValue = "-1") double minPrice,
+                                              @RequestParam(name = "maxPrice",defaultValue = "-1") double maxPrice,
                                               @RequestParam(name = "categoryId", defaultValue = "-1") int categoryId,
                                               @RequestParam(name = "brandId", defaultValue = "-1") int brandId,
                                               @RequestParam(name = "name", required = false) String name){
