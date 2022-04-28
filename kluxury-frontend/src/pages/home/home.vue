@@ -166,8 +166,8 @@
               <div class="filter" data-filter=".Jewellery">Jewellery</div>
             </div>
           </div>
-          <div id="Container" class="fiter-grid">
-            <div class="mix  Nightwear">
+          <div id="Container" class="filter-grid">
+            <div class="mix  Nightwear" style="display: inline-block">
               <div class="filter-item">
                 <div class="single-product">
                   <div class="product-image fix">
@@ -207,7 +207,7 @@
                 </div>
               </div>
             </div>
-            <div class="mix Dress Jewellery">
+            <div class="mix Dress Jewellery" style="display: inline-block">
               <div class="filter-item">
                 <div class="single-product">
                   <div class="product-image fix">
@@ -247,7 +247,7 @@
                 </div>
               </div>
             </div>
-            <div class="mix Nightwear Jewellery">
+            <div class="mix Nightwear Jewellery" style="display: inline-block">
               <div class="filter-item">
                 <div class="single-product">
                   <div class="product-image fix">
@@ -287,7 +287,7 @@
                 </div>
               </div>
             </div>
-            <div class="mix Nightwear Jewellery Dress">
+            <div class="mix Nightwear Jewellery Dress" style="display: inline-block">
               <div class="filter-item">
                 <div class="single-product">
                   <div class="product-image fix">
@@ -327,7 +327,7 @@
                 </div>
               </div>
             </div>
-            <div class="mix  Nightwear">
+            <div class="mix  Nightwear" style="display: inline-block">
               <div class="filter-item">
                 <div class="single-product">
                   <div class="product-image fix">
@@ -367,7 +367,7 @@
                 </div>
               </div>
             </div>
-            <div class="mix Dress Jewellery">
+            <div class="mix Dress Jewellery" style="display: inline-block">
               <div class="filter-item">
                 <div class="single-product">
                   <div class="product-image fix">
@@ -407,7 +407,7 @@
                 </div>
               </div>
             </div>
-            <div class="mix Nightwear Jewellery">
+            <div class="mix Nightwear Jewellery" style="display: inline-block">
               <div class="filter-item">
                 <div class="single-product">
                   <div class="product-image fix">
@@ -447,7 +447,7 @@
                 </div>
               </div>
             </div>
-            <div class="mix Nightwear Jewellery Dress">
+            <div class="mix Nightwear Jewellery Dress" style="display: inline-block">
               <div class="filter-item">
                 <div class="single-product">
                   <div class="product-image fix">

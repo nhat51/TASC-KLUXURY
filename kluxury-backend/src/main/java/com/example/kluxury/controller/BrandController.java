@@ -18,14 +18,14 @@ public class BrandController {
     @Autowired
     private BrandService service;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, path = "list")
     public ResponseEntity<Object> getAll(){
         return new ResponseEntity<>(new RESTResponse.Success()
-                .addData(service.getAll())
+                .addDatas(service.getAll())
                 .buildData(), HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, path = "add")
     public ResponseEntity<Object> save(@RequestBody Brand brand){
           return new ResponseEntity<>(new RESTResponse.Success()
                 .addData(service.save(brand))

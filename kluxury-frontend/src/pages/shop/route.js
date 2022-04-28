@@ -7,5 +7,10 @@ const routes = [
         component: shop,
         title:"Shop",
     },
+    {
+        path: '/shop',
+        component: shop,
+        title:"Shop",
+    }
 ]
 export default routes;
