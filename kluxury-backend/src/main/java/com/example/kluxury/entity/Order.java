@@ -1,6 +1,7 @@
 package com.example.kluxury.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,7 +43,8 @@ public class Order extends BaseEntity{
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
+//    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<OrderDetail> orderDetails;
 
     @JsonIgnore
@@ -57,5 +59,9 @@ public class Order extends BaseEntity{
     @JsonIgnore
     public void setTotalMoney(){
         this.totalPrice = getTotal();
+    }
+
+    public void removeOderDetailFromOrder(OrderDetail orderDetail){
+        this.orderDetails.remove(orderDetail);
     }
 }

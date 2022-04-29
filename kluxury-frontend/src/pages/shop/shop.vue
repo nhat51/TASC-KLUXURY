@@ -160,7 +160,7 @@
 											$185.00
 										</span>
                       <div class="add-to-cart">
-                        <a href="#"><i class="fa fa-shopping-cart"></i></a>
+                        <a @click="addToCart(product.id)"><i class="fa fa-shopping-cart"></i></a>
                       </div>
                     </div>
                   </div>
@@ -331,6 +331,7 @@
 import CategoryService from "@/service/CategoryService";
 import BrandService from "@/service/BrandService";
 import ProductService from "@/service/ProductService";
+import OrderService from "@/service/OrderService";
 
 export default {
   name: "shop",
@@ -348,8 +349,12 @@ export default {
         brandId:undefined,
         minPrice: undefined,
         maxPrice: undefined,
-      }
-
+      },
+      cartItem:{
+        product_id: undefined,
+        amount: 1
+      },
+      userId: 1
     }
   },
   created() {
@@ -389,6 +394,7 @@ export default {
       ProductService.getAll(this.params).then(
           rs => {
             this.productData = rs.data.data
+
           }
       )
     },
@@ -421,6 +427,20 @@ export default {
       ProductService.getAll().then(
           rs => {
             this.productData = rs.data.data
+          }
+      )
+    },
+    addToCart(productId){
+      console.log(this.cartItem)
+      this.cartItem.product_id = productId;
+      OrderService.addToCart(this.userId,this.cartItem).then(
+          rs => {
+        console.log(rs.data)
+          if (rs.data.status === 1){
+            alert("Đã thêm sản phẩm vào giỏ hàng")
+          }else {
+            alert("Thêm sản phẩm thất bại")
+          }
           }
       )
     }

@@ -15,10 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService{
@@ -46,7 +43,8 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public Order getCart(int userId) {
-        return orderRepository.getCart(userId);
+        Order order = orderRepository.getCart(userId);
+        return order;
     }
 
     @Override
@@ -78,7 +76,7 @@ public class OrderServiceImpl implements OrderService{
             }
             for (OrderDetail od : listOrderDetail) {
                 if (od.getProduct().getId() == orderDetailDto.getProduct_id()){
-                    od.setAmount(od.getAmount() + 1);
+                    od.setAmount(od.getAmount() + orderDetailDto.getAmount());
                     exist.setTotalMoney();
                     return orderRepository.save(exist);
                 }
@@ -96,6 +94,7 @@ public class OrderServiceImpl implements OrderService{
         User cartOwner = userRepository.getById(userId);
         newOrder.set_shopping_cart(true);
         newOrder.setUser(cartOwner);
+        newOrder.setUser_id(cartOwner.getId());
         Order orderSaved = orderRepository.save(newOrder);
         orderDetail.setOrder(orderSaved);
         Set<OrderDetail> orderDetails = new HashSet<>();
@@ -105,21 +104,22 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public Order updateCart(int userId, Set<OrderDetail> list) {
+    public Order updateCart(int userId, int productId) {
         Order cart = orderRepository.getCart(userId);
-        if (list.size() == 0){
-            return cart;
-        }
-        cart.setOrderDetails(list);
         return orderRepository.save(cart);
     }
 
     @Override
     public Order removeItem(int userId, int productId) {
         Order cart = orderRepository.getCart(userId);
-        Set<OrderDetail> setItem = cart.getOrderDetails();
-        setItem.removeIf(item -> productId == item.getProduct().getId());
-        cart.setOrderDetails(setItem);
+        OrderDetailId key = new OrderDetailId();
+        key.setOrder_id(cart.getId());
+        key.setProduct_id(productId);
+        OrderDetail orderDetail = orderDetailRepository.getById(key);
+        cart.removeOderDetailFromOrder(orderDetail);
+        orderDetailRepository.delete(orderDetail);
+
+        System.out.println(orderDetail.getProduct().getName());
         return orderRepository.save(cart);
     }
 

@@ -50,9 +50,7 @@ public class OrderController {
 
     @RequestMapping(method = RequestMethod.GET,path = "cart")
     public ResponseEntity<Object> getCart(@RequestHeader(name = "user_id") int userId){
-        return new ResponseEntity<>(new RESTResponse.Success()
-                .addData(service.getCart(userId))
-                .buildData(), HttpStatus.OK);
+        return new ResponseEntity<>(service.getCart(userId), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST,path = "add_to_cart")
@@ -63,17 +61,15 @@ public class OrderController {
     }
 
     @RequestMapping(method = RequestMethod.POST,path = "update_cart")
-    public ResponseEntity<Object> updateCart(@RequestHeader(name = "user_id") int userId, @RequestBody Set<OrderDetail> list){
+    public ResponseEntity<Object> updateCart(@RequestHeader(name = "user_id") int userId, @RequestBody int productId){
         return new ResponseEntity<>(new RESTResponse.Success()
-                .addData(service.updateCart(userId,list))
+                .addData(service.updateCart(userId,productId))
                 .buildData(), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST,path = "remove")
     public ResponseEntity<Object> remove(@RequestHeader(name = "user_id") int userId, @RequestParam(name = "product_id") int productId){
-        return new ResponseEntity<>(new RESTResponse.Success()
-                .addData(service.removeItem(userId,productId))
-                .buildData(), HttpStatus.OK);
+        return new ResponseEntity<>(service.removeItem(userId,productId), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST,path = "proceed_order")

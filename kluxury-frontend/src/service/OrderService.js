@@ -4,15 +4,17 @@ const URL_CATEGORIES = "http://localhost:8080/api/v1/orders";
 
 class OrderService {
 
-    getAll(user_id){
-        return axios.get(URL_CATEGORIES + "/cart", {
-            headers:user_id
-        });
+    getAll(userId){
+        return axios.get(URL_CATEGORIES + "/cart",{headers:{'user_id' : userId}});
     }
     addToCart(userId,body){
-        return axios.get(URL_CATEGORIES + "/add_to_cart"
-            , {headers:userId}
-            ,body
+        return axios.post(URL_CATEGORIES + "/add_to_cart" ,body
+            , {headers:{'user_id' : userId}}
+        );
+    }
+    removeItem(param,userId){
+        return axios.post(URL_CATEGORIES + "/remove",null,
+            {headers:{'user_id' : userId},params:param}
         );
     }
     proceedOrder(userId,orderDto){

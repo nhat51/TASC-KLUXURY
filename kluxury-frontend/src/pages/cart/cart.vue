@@ -26,28 +26,21 @@
                     <th class="product-name">Product</th>
                     <th class="product-price">Price</th>
                     <th class="product-quantity">Quantity</th>
-                    <th class="product-subtotal">Total</th>
                     <th class="product-remove">Remove</th>
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td class="product-thumbnail"><a href="#"><img src="img/cart/cart.jpg"
+                  <tr v-for="od in cartData.orderDetails" :key="od.id">
+                    <td class="product-thumbnail"><a href="#"><img src="img/product/productDemo.jpg"
                                                                    alt="" /></a></td>
-                    <td class="product-name"><a href="#">Vestibulum suscipit</a></td>
-                    <td class="product-price"><span class="amount">�165.00</span></td>
-                    <td class="product-quantity"><input type="number" value="1" /></td>
-                    <td class="product-subtotal">�165.00</td>
-                    <td class="product-remove"><a href="#"><i class="fa fa-times"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td class="product-thumbnail"><a href="#"><img src="img/cart/cart2.jpg"
-                                                                   alt="" /></a></td>
-                    <td class="product-name"><a href="#">Vestibulum dictum magna</a></td>
-                    <td class="product-price"><span class="amount">�50.00</span></td>
-                    <td class="product-quantity"><input type="number" value="1" /></td>
-                    <td class="product-subtotal">�50.00</td>
-                    <td class="product-remove"><a href="#"><i class="fa fa-times"></i></a></td>
+                    <td class="product-name"><a href="#">{{od.product_name}}</a></td>
+                    <td class="product-price"><span class="amount">${{od.unit_price}}</span></td>
+                    <td class="product-quantity">
+                      <button @click="decreaseProductAmount(od.id.product_id)" id="decrease"><i class="fa fa-minus"></i></button>
+                      <input id="productAmount" type="number" :value="od.amount" />
+                      <button @click="increaseProductAmount(od.id.product_id)" id="increase"><i class="fa fa-plus"></i></button>
+                    </td>
+                    <td class="product-remove"><a @click="confirmRemove(od.id.product_id)"><i class="fa fa-times"></i></a></td>
                   </tr>
                   </tbody>
                 </table>
@@ -99,7 +92,7 @@
                       <tr class="order-total">
                         <th>Total</th>
                         <td>
-                          <strong><span class="amount">�215.00</span></strong>
+                          <strong><span class="amount">${{this.cartData.totalPrice}}</span></strong>
                         </td>
                       </tr>
                       </tbody>
@@ -119,8 +112,65 @@
 </template>
 
 <script>
+import OrderService from "@/service/OrderService";
+
 export default {
-  name: "cart"
+  name: "cart",
+  data(){
+    return {
+      cartData:[],
+      cartItem:[],
+      userId: 1,
+      params:{
+        product_id:undefined
+      },
+      productAmount:{
+        product_id: undefined,
+        amount: undefined
+      }
+    }
+  },
+  created() {
+    this.getCartData()
+  },
+  methods:{
+    getCartData(){
+      OrderService.getAll(this.userId).then(rs =>{
+        this.cartData = rs.data
+        console.log(rs.data)
+      })
+    },
+    removeItem(productId){
+      this.params.product_id = productId
+      OrderService.removeItem(this.params,this.userId).then(
+          () => {
+            this.getCartData()
+          }
+      )
+
+    },
+    confirmRemove(id){
+      const isConfirm = confirm("Bạn có muốn xóa sản phẩm này khỏi giỏ hàng")
+      if (isConfirm === true){
+        this.removeItem(id)
+        this.getCartData()
+      }
+    },
+    increaseProductAmount(id){
+     this.productAmount.product_id = id;
+     this.productAmount.amount = 1;
+     OrderService.addToCart(this.userId,this.productAmount)
+      this.getCartData()
+    },
+    decreaseProductAmount(id){
+      this.productAmount.product_id = id;
+      this.productAmount.amount = -1;
+      OrderService.addToCart(this.userId,this.productAmount)
+      this.getCartData()
+    }
+
+
+  }
 }
 </script>
 
