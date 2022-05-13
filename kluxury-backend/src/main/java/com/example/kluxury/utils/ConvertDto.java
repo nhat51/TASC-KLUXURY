@@ -15,8 +15,8 @@ public class ConvertDto {
         productDto.setDescription(product.getDescription());
         productDto.setName(product.getName());
         productDto.setPrice(product.getPrice());
-        productDto.setCreated_at(product.getCreated_at());
-        productDto.setUpdated_at(product.getUpdated_at());
+        productDto.setCreated_at(product.getCreatedAt());
+        productDto.setUpdated_at(product.getUpdatedAt());
         productDto.setImages(product.getImages());
         productDto.setStatus(product.getStatus());
         productDto.setBrandDto(convertBrandEntity(product.getBrand()));

@@ -137,8 +137,7 @@
                     <div class="single-product">
                       <div class="product-image fix">
                         <a href="product-details.html">
-                          <img src="img/product/productDemo.jpg" alt="">
-                          <img class="primary-2" src="img/product/productDemo.jpg" alt="">
+                          <img :src="product.images" alt=""/>
                         </a>
                         <div class="product-action">
                           <a href="#" data-bs-toggle="modal" data-bs-target="#myModal"
@@ -156,8 +155,7 @@
                       </div>
                       <h4 class="name"><a href="#">{{product.name}}</a></h4>
                       <span class="amount">
-											<del><span class="amount-del">$170.00</span></del>
-											$185.00
+											${{product.price}}
 										</span>
                       <div class="add-to-cart">
                         <a @click="addToCart(product.id)"><i class="fa fa-shopping-cart"></i></a>
@@ -342,7 +340,7 @@ export default {
       brandData:[],
       productData:[],
       params: {
-        pageSize: undefined,
+        pageSize: 9,
         page: undefined,
         name: undefined,
         categoryId: undefined,
@@ -352,7 +350,8 @@ export default {
       },
       cartItem:{
         product_id: undefined,
-        amount: 1
+        amount: 1,
+        is_increase: undefined
       },
       userId: 1
     }

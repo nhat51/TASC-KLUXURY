@@ -28,6 +28,11 @@ class OrderService {
             ,{headers:userId}
         );
     }
+    controlValue(body,userId){
+        return axios.post(URL_CATEGORIES + "/control-value",body,{headers:{'user_id' : userId}});
+    }
+
+
 
 }
 

@@ -31,16 +31,17 @@
                   </thead>
                   <tbody>
                   <tr v-for="od in cartData.orderDetails" :key="od.id">
-                    <td class="product-thumbnail"><a href="#"><img src="img/product/productDemo.jpg"
-                                                                   alt="" /></a></td>
-                    <td class="product-name"><a href="#">{{od.product_name}}</a></td>
-                    <td class="product-price"><span class="amount">${{od.unit_price}}</span></td>
+                    <td class="product-thumbnail"><a href="#"><img :src="od.product_thumbnail"
+                                                                   alt=""/></a></td>
+                    <td class="product-name"><a href="#">{{ od.product_name }}</a></td>
+                    <td class="product-price"><span class="amount">${{ od.unit_price }}</span></td>
                     <td class="product-quantity">
-                      <button @click="decreaseProductAmount(od.id.product_id)" id="decrease"><i class="fa fa-minus"></i></button>
-                      <input id="productAmount" type="number" :value="od.amount" />
-                      <button @click="increaseProductAmount(od.id.product_id)" id="increase"><i class="fa fa-plus"></i></button>
+                      <button @click="decreaseProductAmount(od.id.product_id)"><i class="fa fa-minus"></i></button>
+                      <input id="productAmount" type="number" :value="od.amount"/>
+                      <button @click="increaseProductAmount(od.id.product_id)"><i class="fa fa-plus"></i></button>
                     </td>
-                    <td class="product-remove"><a @click="confirmRemove(od.id.product_id)"><i class="fa fa-times"></i></a></td>
+                    <td class="product-remove"><a @click="confirmRemove(od.id.product_id)"><i
+                        class="fa fa-times"></i></a></td>
                   </tr>
                   </tbody>
                 </table>
@@ -48,14 +49,14 @@
               <div class="row">
                 <div class="col-lg-8 col-md-7">
                   <div class="buttons-cart">
-                    <input type="submit" value="Update Cart" />
+                    <input type="submit" value="Update Cart"/>
                     <a href="#">Continue Shopping</a>
                   </div>
                   <div class="coupon">
                     <h3>Coupon</h3>
                     <p>Enter your coupon code if you have one.</p>
-                    <input type="text" placeholder="Coupon code" />
-                    <input type="submit" value="Apply Coupon" />
+                    <input type="text" placeholder="Coupon code"/>
+                    <input type="submit" value="Apply Coupon"/>
                   </div>
                 </div>
                 <div class="col-lg-4 col-md-5">
@@ -72,13 +73,13 @@
                         <td>
                           <ul id="shipping_method">
                             <li>
-                              <input type="radio" />
+                              <input type="radio"/>
                               <label>
                                 Flat Rate: <span class="amount">�7.00</span>
                               </label>
                             </li>
                             <li>
-                              <input type="radio" />
+                              <input type="radio"/>
                               <label>
                                 Free Shipping
                               </label>
@@ -92,7 +93,7 @@
                       <tr class="order-total">
                         <th>Total</th>
                         <td>
-                          <strong><span class="amount">${{this.cartData.totalPrice}}</span></strong>
+                          <strong><span class="amount">${{ this.cartData.totalPrice }}</span></strong>
                         </td>
                       </tr>
                       </tbody>
@@ -116,56 +117,57 @@ import OrderService from "@/service/OrderService";
 
 export default {
   name: "cart",
-  data(){
+  data() {
     return {
-      cartData:[],
-      cartItem:[],
+      cartData: [],
+      cartItem: [],
       userId: 1,
-      params:{
-        product_id:undefined
+      params: {
+        product_id: undefined
       },
-      productAmount:{
+      productAmount: {
         product_id: undefined,
-        amount: undefined
-      }
+        amount: undefined,
+        is_increase: undefined
+      },
     }
   },
   created() {
     this.getCartData()
   },
-  methods:{
-    getCartData(){
-      OrderService.getAll(this.userId).then(rs =>{
+  methods: {
+    getCartData() {
+      OrderService.getAll(this.userId).then(rs => {
         this.cartData = rs.data
-        console.log(rs.data)
       })
     },
-    removeItem(productId){
+    removeItem(productId) {
       this.params.product_id = productId
-      OrderService.removeItem(this.params,this.userId).then(
+      OrderService.removeItem(this.params, this.userId).then(
           () => {
             this.getCartData()
           }
       )
-
     },
-    confirmRemove(id){
+    confirmRemove(id) {
       const isConfirm = confirm("Bạn có muốn xóa sản phẩm này khỏi giỏ hàng")
-      if (isConfirm === true){
+      if (isConfirm === true) {
         this.removeItem(id)
         this.getCartData()
       }
     },
-    increaseProductAmount(id){
-     this.productAmount.product_id = id;
-     this.productAmount.amount = 1;
-     OrderService.addToCart(this.userId,this.productAmount)
+    increaseProductAmount(id) {
+      this.productAmount.product_id = parseInt(id);
+      this.productAmount.is_increase = 1;
+      console.log(this.productAmount)
+      OrderService.controlValue(this.productAmount, this.userId)
       this.getCartData()
     },
-    decreaseProductAmount(id){
-      this.productAmount.product_id = id;
-      this.productAmount.amount = -1;
-      OrderService.addToCart(this.userId,this.productAmount)
+    decreaseProductAmount(id) {
+      this.productAmount.product_id = parseInt(id);
+      this.productAmount.is_increase = 0;
+      console.log(this.productAmount)
+      OrderService.controlValue(this.productAmount, this.userId)
       this.getCartData()
     }
 

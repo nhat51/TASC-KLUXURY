@@ -12,6 +12,7 @@ import com.example.kluxury.utils.OrderFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class OrderController {
     @Autowired
     OrderService service;
 
+    @PreAuthorize("hasAuthority('ORDER_READ')")
     @RequestMapping(method = RequestMethod.GET,path = "list")
     public ResponseEntity<Object> listProduct(@RequestParam(name = "page",defaultValue = "1") int page,
                                               @RequestParam(name = "pageSize",defaultValue = "5") int pageSize,
@@ -48,11 +50,13 @@ public class OrderController {
                 .buildData(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ORDER_WRITE')")
     @RequestMapping(method = RequestMethod.GET,path = "cart")
     public ResponseEntity<Object> getCart(@RequestHeader(name = "user_id") int userId){
         return new ResponseEntity<>(service.getCart(userId), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ORDER_WRITE')")
     @RequestMapping(method = RequestMethod.POST,path = "add_to_cart")
     public ResponseEntity<Object> addToCart(@RequestHeader(name = "user_id") int userId, @RequestBody OrderDetailDto orderDetailDto){
         return new ResponseEntity<>(new RESTResponse.Success()
@@ -60,18 +64,27 @@ public class OrderController {
                 .buildData(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ORDER_WRITE')")
     @RequestMapping(method = RequestMethod.POST,path = "update_cart")
-    public ResponseEntity<Object> updateCart(@RequestHeader(name = "user_id") int userId, @RequestBody int productId){
+    public ResponseEntity<Object> updateCart(@RequestHeader(name = "user_id") int userId, @RequestBody Set<OrderDetailDto> list){
         return new ResponseEntity<>(new RESTResponse.Success()
-                .addData(service.updateCart(userId,productId))
+                .addData(service.updateCart(userId,list))
                 .buildData(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ORDER_WRITE')")
     @RequestMapping(method = RequestMethod.POST,path = "remove")
     public ResponseEntity<Object> remove(@RequestHeader(name = "user_id") int userId, @RequestParam(name = "product_id") int productId){
         return new ResponseEntity<>(service.removeItem(userId,productId), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ORDER_WRITE')")
+    @RequestMapping(method = RequestMethod.POST,path = "control-value")
+    public ResponseEntity<Object> controlValue(@RequestHeader(name = "user_id") int userId, @RequestBody OrderDetailDto orderDetailDto){
+        return new ResponseEntity<>(service.controlValue(userId,orderDetailDto), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('ORDER_WRITE')")
     @RequestMapping(method = RequestMethod.POST,path = "proceed_order")
     public ResponseEntity<Object> proceedOrder(@RequestHeader(name = "user_id") int userId, @RequestBody OrderDto orderDto){
         return new ResponseEntity<>(new RESTResponse.Success()

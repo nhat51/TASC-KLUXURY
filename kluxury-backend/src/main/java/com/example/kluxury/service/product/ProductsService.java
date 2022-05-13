@@ -10,7 +10,8 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface ProductsService {
-    MyPage findAll(ProductFilter filter);
+    Page<Product> findAll(ProductFilter filter);
+    Page<Product> getProductByCategory(int parentId);
     ProductDto getById(int id);
     Product save(Product product);
     ProductDto delete(int id);

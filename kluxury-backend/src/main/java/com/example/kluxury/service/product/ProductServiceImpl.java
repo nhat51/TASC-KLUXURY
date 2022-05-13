@@ -33,19 +33,21 @@ public class ProductServiceImpl implements ProductsService {
     CategoryRepository categoryRepository;
 
     @Override
-    public MyPage findAll(ProductFilter filter) {
+    public Page<Product> findAll(ProductFilter filter) {
         Specification<Product> spec = Specification.where(null);
         PageRequest pageRequest = PageRequest.of(filter.getPage() - 1, filter.getPageSize());
-        spec = spec.and(new ProductSpecification(new SearchCriteria(ProductFilter.STATUS,SQLConstant.EQUAL,false)));
+        spec = spec.and(new ProductSpecification(new SearchCriteria(ProductFilter.STATUS, SQLConstant.EQUAL, false)));
         if (filter.getNameProduct() != null && filter.getNameProduct().length() > 0) {
             spec = spec.and(new ProductSpecification(new SearchCriteria(ProductFilter.NAME, SQLConstant.LIKE, filter.getNameProduct())));
         }
         if (filter.getCategory_id() > 0) {
             spec = spec.and(new ProductSpecification(new SearchCriteria(ProductFilter.CATEGORY_ID, SQLConstant.EQUAL, filter.getCategory_id())));
-            Category parentCategory = categoryRepository.getById(filter.getCategory_id());
-            if (parentCategory.getListSubCategory().size() > 0){
-                for (Category c : parentCategory.getListSubCategory()) {
-                    spec = spec.and(new ProductSpecification(new SearchCriteria(ProductFilter.CATEGORY_ID,SQLConstant.EQUAL,c.getId())));
+            Optional<Category> parentCategory = categoryRepository.findById(filter.getCategory_id());
+            if (parentCategory.isPresent()) {
+                if (parentCategory.get().getListSubCategory().size() > 0) {
+                    for (Category c : parentCategory.get().getListSubCategory()) {
+                        spec = spec.or(new ProductSpecification(new SearchCriteria(ProductFilter.CATEGORY_ID, SQLConstant.EQUAL,c.getId())));                        System.out.println(c.getId());
+                    }
                 }
             }
         }
@@ -59,7 +61,7 @@ public class ProductServiceImpl implements ProductsService {
             spec = spec.and(new ProductSpecification(new SearchCriteria(ProductFilter.PRICE, SQLConstant.LESS_THAN_OR_EQUAL_TO, filter.getMinPrice())));
         }
         Page page = productRepository.findAll(spec, pageRequest);
-        List<Product> products = page.getContent();
+        /*List<Product> products = page.getContent();
         List<ProductDto> dtoList = new ArrayList<>();
         for (Product p: products) {
             dtoList.add(ConvertDto.convertProductEntity(p));
@@ -68,14 +70,20 @@ public class ProductServiceImpl implements ProductsService {
         mypage.setContent(dtoList);
         mypage.setPageSize(page.getSize());
         mypage.setTotalPage(page.getTotalPages());
-        mypage.setPage(page.getNumber() + 1);
-        return mypage;
+        mypage.setPage(page.getNumber() + 1);*/
+        return productRepository.findAll(spec, pageRequest);
+    }
+
+    @Override
+    public Page<Product> getProductByCategory(int parentId) {
+
+        return null;
     }
 
     @Override
     public ProductDto getById(int id) {
         Optional<Product> product = productRepository.findById(id);
-        if (product.isPresent()){
+        if (product.isPresent()) {
             ProductDto dto = ConvertDto.convertProductEntity(product.get());
             return dto;
         }
@@ -84,8 +92,8 @@ public class ProductServiceImpl implements ProductsService {
 
     @Override
     public Product save(Product product) {
-        product.setCreated_at(LocalDate.now());
-        product.setUpdated_at(LocalDate.now());
+        product.setCreatedAt(LocalDate.now());
+        product.setUpdatedAt(LocalDate.now());
         productRepository.save(product);
         return product;
     }
@@ -101,14 +109,14 @@ public class ProductServiceImpl implements ProductsService {
     @Override
     public ProductDto update(int id, Product product) {
         Optional<Product> findProduct = productRepository.findById(id);
-        if (findProduct.isPresent()){
+        if (findProduct.isPresent()) {
             findProduct.get().setName(product.getName());
             findProduct.get().setPrice(product.getPrice());
             findProduct.get().setBrand_id(product.getBrand_id());
             findProduct.get().setCategory_id(product.getCategory_id());
             findProduct.get().setDescription(product.getDescription());
             findProduct.get().setImages(product.getImages());
-            findProduct.get().setUpdated_at(LocalDate.now());
+            findProduct.get().setUpdatedAt(LocalDate.now());
             productRepository.save(findProduct.get());
 
             return ConvertDto.convertProductEntity(findProduct.get());

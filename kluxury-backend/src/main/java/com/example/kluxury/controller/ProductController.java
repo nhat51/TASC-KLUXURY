@@ -9,8 +9,10 @@ import com.example.kluxury.response.RESTResponse;
 import com.example.kluxury.service.product.ProductsService;
 import com.example.kluxury.utils.ProductFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,13 +42,14 @@ public class ProductController {
                 .withPage(page)
                 .withNameProduct(name)
                 .build();
-        MyPage paging = service.findAll(filter);
+        Page paging = service.findAll(filter);
         return new ResponseEntity<>(new RESTResponse.Success()
-                .setPagination(new RESTPagination(paging.getPage() + 1, paging.getPageSize(), paging.getTotalPage()))
+                .setPagination(new RESTPagination(paging.getNumber() + 1, paging.getSize(), paging.getTotalPages(), paging.getTotalElements()))
                 .addDatas((List<ProductDto>) paging.getContent())
                 .buildData(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('PRODUCT_WRITE')")
     @RequestMapping(method = RequestMethod.POST, path = "save")
     public ResponseEntity<Object> saveProduct(@RequestBody Product product){
         return new ResponseEntity<>(new RESTResponse.Success()
@@ -61,6 +64,7 @@ public class ProductController {
                 .buildData(),HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('PRODUCT_WRITE')")
     @RequestMapping(method = RequestMethod.GET, path = "update")
     public ResponseEntity<Object> updateProduct(@RequestParam(name = "id") int id,@RequestBody Product product){
         return new ResponseEntity<>(new RESTResponse.Success()

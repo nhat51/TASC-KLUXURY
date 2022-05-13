@@ -49,10 +49,10 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public Order addToCart(int userId, OrderDetailDto orderDetailDto) {
-        //Tìm sản phầm theo id truyền vào
+        /*Tìm sản phầm theo id truyền vào*/
         Optional<Product> product = productRepository.findById(orderDetailDto.getProduct_id());
         OrderDetail orderDetail = new OrderDetail();
-        //Nếu có thì set tên và id của sản phẩm trong orderDetail
+        /*Nếu có thì set tên và id của sản phẩm trong orderDetail*/
         if (product.isPresent()) {
             OrderDetailId key = new OrderDetailId();
             key.setProduct_id(product.get().getId());
@@ -61,6 +61,7 @@ public class OrderServiceImpl implements OrderService{
             orderDetail.setProduct(product.get());
             orderDetail.setProduct_name(product.get().getName());
             orderDetail.setUnit_price(product.get().getPrice());
+            orderDetail.setProduct_thumbnail(product.get().getImages());
         }
         //set số lượng và giá của sản phầm tại thời điểm bán
         orderDetail.setAmount(orderDetailDto.getAmount());
@@ -72,11 +73,12 @@ public class OrderServiceImpl implements OrderService{
             if (listOrderDetail.size() == 0 ){
                 listOrderDetail.add(orderDetail);
                 orderDetail.setOrder(exist);
+                exist.setTotalMoney();
                 return orderRepository.save(exist);
             }
             for (OrderDetail od : listOrderDetail) {
                 if (od.getProduct().getId() == orderDetailDto.getProduct_id()){
-                    od.setAmount(od.getAmount() + orderDetailDto.getAmount());
+                    od.setAmount(od.getAmount() + 1);
                     exist.setTotalMoney();
                     return orderRepository.save(exist);
                 }
@@ -88,7 +90,6 @@ public class OrderServiceImpl implements OrderService{
             exist.setTotalMoney();
             return orderRepository.save(exist);
         }
-
         //trường hợp chưa có cart trong db
         Order newOrder = new Order();
         User cartOwner = userRepository.getById(userId);
@@ -100,12 +101,50 @@ public class OrderServiceImpl implements OrderService{
         Set<OrderDetail> orderDetails = new HashSet<>();
         orderDetails.add(orderDetail);
         orderSaved.setOrderDetails(orderDetails);
+        orderSaved.setTotalMoney();
         return orderRepository.save(orderSaved);
     }
 
     @Override
-    public Order updateCart(int userId, int productId) {
+    public Order controlValue(int userId, OrderDetailDto orderDetailDto) {
+        System.out.println(orderDetailDto.toString());
+        Optional<Product> product = productRepository.findById(orderDetailDto.getProduct_id());
         Order cart = orderRepository.getCart(userId);
+        if (product.isPresent() && orderDetailDto.getIs_increase() == 1){
+            OrderDetailId key = new OrderDetailId();
+            key.setOrder_id(cart.getId());
+            key.setProduct_id(product.get().getId());
+
+            OrderDetail orderDetail = orderDetailRepository.getById(key);
+            orderDetail.setAmount(orderDetail.getAmount() + 1);
+            cart.setTotalMoney();
+        }
+        if (product.isPresent() && orderDetailDto.getIs_increase() == 0){
+            OrderDetailId key = new OrderDetailId();
+            key.setOrder_id(cart.getId());
+            key.setProduct_id(product.get().getId());
+
+            OrderDetail orderDetail = orderDetailRepository.getById(key);
+            orderDetail.setAmount(orderDetail.getAmount() - 1);
+            cart.setTotalMoney();
+        }
+
+        return orderRepository.save(cart);
+    }
+
+    @Override
+    public Order updateCart(int userId, Set<OrderDetailDto> orderDetailDtos) {
+        Order cart = orderRepository.getCart(userId);
+        Set<OrderDetail> listOrderDetail = cart.getOrderDetails();
+        for (OrderDetailDto odDto: orderDetailDtos) {
+            for (OrderDetail od: listOrderDetail ) {
+                if (odDto.getProduct_id() == od.getProduct().getId()){
+                    od.setAmount(odDto.getAmount());
+                }
+            }
+        }
+//        cart.setOrderDetails(listOrderDetail);
+        cart.setTotalMoney();
         return orderRepository.save(cart);
     }
 
@@ -120,6 +159,7 @@ public class OrderServiceImpl implements OrderService{
         orderDetailRepository.delete(orderDetail);
 
         System.out.println(orderDetail.getProduct().getName());
+        cart.setTotalMoney();
         return orderRepository.save(cart);
     }
 

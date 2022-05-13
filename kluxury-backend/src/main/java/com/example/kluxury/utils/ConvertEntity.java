@@ -11,8 +11,8 @@ public class ConvertEntity {
         converted.setPrice(productDto.getPrice());
         converted.setImages(productDto.getImages());
         converted.setDescription(productDto.getDescription());
-        converted.setCreated_at(productDto.getCreated_at());
-        converted.setUpdated_at(productDto.getUpdated_at());
+        converted.setCreatedAt(productDto.getCreated_at());
+        converted.setUpdatedAt(productDto.getUpdated_at());
         converted.setStatus(productDto.getStatus());
         return converted;
     }

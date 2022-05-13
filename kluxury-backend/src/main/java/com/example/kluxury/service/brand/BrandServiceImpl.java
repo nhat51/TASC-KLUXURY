@@ -32,7 +32,7 @@ public class BrandServiceImpl implements BrandService{
     public Brand update(int id, Brand brand) {
         Brand updatedBrand = brandRepository.getById(id);
         updatedBrand.setName(brand.getName());
-        updatedBrand.setUpdated_at(LocalDate.now());
+        updatedBrand.setUpdatedAt(LocalDate.now());
         updatedBrand.setBrandImage(brand.getBrandImage());
         return updatedBrand;
     }

@@ -13,7 +13,8 @@ import java.util.Set;
 public interface OrderService {
     Order getCart(int userId);
     Order addToCart(int userId, OrderDetailDto orderDetailDto);
-    Order updateCart(int userId, int productId);
+    Order controlValue(int userId, OrderDetailDto orderDetailDto);
+    Order updateCart(int userId, Set<OrderDetailDto> orderDetailDtoList);
     Order removeItem(int userId, int productId);
     Order proceedOrder(int userId, OrderDto orderDto);
     MyPage getAll(OrderFilter filter);

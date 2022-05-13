@@ -1,5 +1,6 @@
 package com.example.kluxury.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,12 +38,10 @@ public class Product extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "category_id",insertable = false,updatable = false)
-    @JsonIgnore
     private Category category;
 
     @ManyToOne
     @JoinColumn(name = "brand_id",insertable = false,updatable = false)
-    @JsonIgnore
     private Brand brand;
 
     @OneToMany(mappedBy = "product")
@@ -50,4 +49,6 @@ public class Product extends BaseEntity{
 
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
     Set<ProductDetail> productDetails;
+
+
 }

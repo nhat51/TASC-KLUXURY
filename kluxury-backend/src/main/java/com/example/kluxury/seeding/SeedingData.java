@@ -1,11 +1,7 @@
 package com.example.kluxury.seeding;
 
-import com.example.kluxury.entity.Brand;
-import com.example.kluxury.entity.Category;
-import com.example.kluxury.entity.Product;
-import com.example.kluxury.repo.BrandRepository;
-import com.example.kluxury.repo.CategoryRepository;
-import com.example.kluxury.repo.ProductRepository;
+import com.example.kluxury.entity.*;
+import com.example.kluxury.repo.*;
 import com.github.javafaker.Cat;
 import com.github.javafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +22,69 @@ public class SeedingData implements CommandLineRunner {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    PermissionRepository permissionRepository;
+
+    @Autowired
+    RoleRepository roleRepository;
+
     HashMap<Integer, Category> mapCategory = new HashMap<>();
     HashMap<Integer, Brand> mapBrand = new HashMap<>();
+    private static final List<String> listImageUrl =
+            Arrays.asList(
+                    "https://res.cloudinary.com/xuanhung2401/image/upload/v1621435615/zw2mzlgx6wuiat9fzqii.jpg",
+                    "https://res.cloudinary.com/xuanhung2401/image/upload/v1621435451/dqohct7wyujhhqorpgbw.jpg",
+                    "https://res.cloudinary.com/xuanhung2401/image/upload/v1621435388/zkrvpjq66crojptfgmeo.jpg",
+                    "https://res.cloudinary.com/xuanhung2401/image/upload/v1621435695/fczgsnzrje5d217gaubr.jpg",
+                    "https://res.cloudinary.com/xuanhung2401/image/upload/v1621435388/zkrvpjq66crojptfgmeo.jpg"
+            );
 
     @Override
     public void run(String... args) throws Exception {
         loadDataBrand();
         loadDataCategory();
         loadDataProduct();
+        loadPermission();
+        loadRole();
+    }
+
+    private void loadRole(){
+        if (roleRepository.count() == 0){
+            Role roleAdmin = new Role();
+            roleAdmin.setId(1);
+            roleAdmin.setName("ADMIN");
+            roleRepository.save(roleAdmin);
+
+            Role roleUser = new Role();
+            roleUser.setId(2);
+            roleUser.setName("USER");
+            roleRepository.save(roleUser);
+
+            Role roleEmployee = new Role();
+            roleEmployee.setId(3);
+            roleEmployee.setName("EMPLOYEE");
+            roleRepository.save(roleEmployee);
+
+        }
+    }
+
+    private void loadPermission() {
+        if (permissionRepository.count() == 0){
+            String[] name = {"ORDER","PRODUCT","CATEGORY","BRAND"};
+
+            String[] method = {"READ","WRITE","DELETE"};
+
+            Set<Permission> permissions = new HashSet<>();
+
+            for (String value : name) {
+                for (String s : method) {
+                    Permission permission = new Permission();
+                    permission.setName(value + "_" + s);
+                    permissionRepository.save(permission);
+                }
+            }
+
+        }
     }
 
     private void loadDataBrand(){
@@ -189,24 +240,27 @@ public class SeedingData implements CommandLineRunner {
     }
 
     private void loadDataProduct(){
+        Faker faker = new Faker();
         if (productRepository.count() == 0) {
-            int max = 11;
-            Faker faker = new Faker();
-            for (int i = 1; i < max; i++) {
+            List<Product> list = new ArrayList<>();
+            Random rand = new Random();
+            for (int i = 1; i < 100; i++) {
                 Product product = new Product();
                 product.setId(i);
-                product.setPrice(faker.random().nextDouble());
-                product.setName(faker.harryPotter().character());
-                product.setDescription(faker.ancient().primordial());
+                product.setPrice(faker.number().randomDouble(3,10,100));
+                product.setName(faker.name().title());
+                product.setDescription(faker.gameOfThrones().quote());
                 product.setStatus(1);
-                product.setRating(faker.random().nextDouble());
-                product.setCategory_id(i);
-                product.setBrand_id(i);
-                product.setBrand(mapBrand.get(i));
-                product.setCategory(mapCategory.get(i));
-
-                productRepository.save(product);
+                product.setRating(faker.number().randomDouble(1,1,5));
+                product.setBrand_id(faker.number().numberBetween(1,10));
+                product.setCategory_id(faker.number().numberBetween(1,10));
+                product.setBrand(mapBrand.get(faker.number().numberBetween(1,10)));
+                product.setCategory(mapCategory.get(faker.number().numberBetween(1,10)));
+                product.setImages(listImageUrl.get(rand.nextInt(listImageUrl.size())));
+                list.add(product);
             }
+            productRepository.saveAll(list);
+            System.out.println("Save all seed data.");
         }
 
     }

@@ -48,7 +48,7 @@ public class CategoryImpl implements CategoryService{
     public Category update(int id, Category category) {
         Category updateCategory = categoryRepository.getById(id);
         updateCategory.setName(category.getName());
-        updateCategory.setUpdated_at(LocalDate.now());
+        updateCategory.setUpdatedAt(LocalDate.now());
         updateCategory.setListSubCategory(category.getListSubCategory());
         return updateCategory;
     }

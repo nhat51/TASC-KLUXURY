@@ -8,6 +8,7 @@ import com.example.kluxury.service.brand.BrandServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,8 +16,11 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("*")
 public class BrandController {
 
-    @Autowired
-    private BrandService service;
+    private final BrandService service;
+
+    public BrandController(BrandService service) {
+        this.service = service;
+    }
 
     @RequestMapping(method = RequestMethod.GET, path = "list")
     public ResponseEntity<Object> getAll(){
@@ -25,6 +29,7 @@ public class BrandController {
                 .buildData(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('BRAND_WRITE')")
     @RequestMapping(method = RequestMethod.POST, path = "add")
     public ResponseEntity<Object> save(@RequestBody Brand brand){
           return new ResponseEntity<>(new RESTResponse.Success()
@@ -32,6 +37,7 @@ public class BrandController {
                 .buildData(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('BRAND_READ')")
     @RequestMapping(method = RequestMethod.GET, path = "detail")
     public ResponseEntity<Object> findById(@RequestParam(name = "id") int id){
         return new ResponseEntity<>(new RESTResponse.Success()
@@ -39,6 +45,7 @@ public class BrandController {
                 .buildData(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('CATEGORY_DELETE')")
     @RequestMapping(method = RequestMethod.GET, path = "delete")
     public ResponseEntity<Object> delete(@RequestParam(name = "id") int id){
         return new ResponseEntity<>(new RESTResponse.Success()

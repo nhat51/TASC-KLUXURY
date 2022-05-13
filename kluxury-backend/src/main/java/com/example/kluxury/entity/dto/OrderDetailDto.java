@@ -1,12 +1,11 @@
 package com.example.kluxury.entity.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
+
+@ToString
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,4 +13,5 @@ import java.time.LocalDate;
 public class OrderDetailDto {
     private int product_id;
     private int amount;
+    private int is_increase;
 }
